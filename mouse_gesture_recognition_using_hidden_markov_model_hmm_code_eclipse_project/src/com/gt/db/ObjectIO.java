@@ -16,23 +16,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * This Class works for both any object <code><T></code>, which implements the
- * Model interface
+ * This Class works for both any object <code><T></code>, which implements the Model interface
  * 
  * @author Ganesh Tiwari
- * 
  * @param <T>
  */
-public class ObjectIO<T> {
+public class ObjectIO< T > {
 
-	private ObjectInputStream input;
-	private ObjectOutputStream output;
-	T model;
+	private ObjectInputStream	input;
+	private ObjectOutputStream	output;
+	T							model;
 
 	/**
 	 * default constructor of modelDB
 	 */
-	public ObjectIO() {
+	public ObjectIO( ) {
 	}
 
 	/**
@@ -41,7 +39,7 @@ public class ObjectIO<T> {
 	 * @param model
 	 *            model of current type to save into db
 	 */
-	public void setModel(T model) {
+	public void setModel( T model ) {
 		this.model = model;
 	}
 
@@ -50,28 +48,28 @@ public class ObjectIO<T> {
 	 * 
 	 * @param filePath
 	 */
-	public void saveModel(String filePath) {
-		System.out.println("CurrentFilePath  :: " + filePath);
+	public void saveModel( String filePath ) {
+		System.out.println( "CurrentFilePath  :: " + filePath );
 		// if parent folder doesnot exists, create one
-		File f = new File(filePath).getParentFile();
-		if (!f.exists()) {
-			f.mkdirs();
+		File f = new File( filePath ).getParentFile( );
+		if ( !f.exists( ) ) {
+			f.mkdirs( );
 		}
 		// open file stream
 		try {
-			output = new ObjectOutputStream(new FileOutputStream(filePath));
-		} catch (FileNotFoundException e) {
-			System.out.println("File Not Found, while saving model");
-		} catch (IOException e) {
-			System.out.println("Some IO Exception, while opening file, for saving");
+			output = new ObjectOutputStream( new FileOutputStream( filePath ) );
+		} catch ( FileNotFoundException e ) {
+			System.out.println( "File Not Found, while saving model" );
+		} catch ( IOException e ) {
+			System.out.println( "Some IO Exception, while opening file, for saving" );
 		}
 		// save model
 		try {
-			output.writeObject(model);
-			output.close();
-		} catch (IOException e) {
-			System.out.println("IOException, error on writing model to file");
-			e.printStackTrace();
+			output.writeObject( model );
+			output.close( );
+		} catch ( IOException e ) {
+			System.out.println( "IOException, error on writing model to file" );
+			e.printStackTrace( );
 		}
 	}
 
@@ -81,26 +79,26 @@ public class ObjectIO<T> {
 	 * @param filePath
 	 * @return the model of type T
 	 */
-	public T readModel(String filePath) {
+	public T readModel( String filePath ) {
 		// open file stream
 		try {
-			input = new ObjectInputStream(new FileInputStream(filePath));
-		} catch (FileNotFoundException e) {
-			System.out.println("File Not Found, while reading model");
-		} catch (IOException e) {
-			System.out.println("Some IO Exception, while opening file");
+			input = new ObjectInputStream( new FileInputStream( filePath ) );
+		} catch ( FileNotFoundException e ) {
+			System.out.println( "File Not Found, while reading model" );
+		} catch ( IOException e ) {
+			System.out.println( "Some IO Exception, while opening file" );
 		}
 		// read
 		try {
-			model = (T) input.readObject();
-			input.close();
-		} catch (IOException e) {
-			System.out.println("Some IO Exception, while reading object from file");
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			System.out.println("Class Not Found, error on type cast");
-		} catch (NullPointerException e) {
-			System.out.println("new user we guess");
+			model = ( T ) input.readObject( );
+			input.close( );
+		} catch ( IOException e ) {
+			System.out.println( "Some IO Exception, while reading object from file" );
+			e.printStackTrace( );
+		} catch ( ClassNotFoundException e ) {
+			System.out.println( "Class Not Found, error on type cast" );
+		} catch ( NullPointerException e ) {
+			System.out.println( "new user we guess" );
 			return null;
 		}
 		return model;

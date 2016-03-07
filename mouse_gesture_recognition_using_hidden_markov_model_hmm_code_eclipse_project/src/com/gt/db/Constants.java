@@ -8,7 +8,8 @@
 package com.gt.db;
 
 public final class Constants {
-	final static String HMM_Extension = ".hmm";
-	final static String CodeBook_Extension = ".cbk";
-	final static String RAW_Data_Extension = ".raw";
+
+	final static String	HMM_Extension		= ".hmm";
+	final static String	CodeBook_Extension	= ".cbk";
+	final static String	RAW_Data_Extension	= ".raw";
 }

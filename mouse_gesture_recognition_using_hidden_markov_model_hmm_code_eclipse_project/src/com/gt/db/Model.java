@@ -8,11 +8,11 @@
 package com.gt.db;
 
 /**
- * 
  * @author Ganesh Tiwari
- *
  */
-public interface Model{
+public interface Model {
+
 	public String getModelType();
+
 	public void showParameters();
 }

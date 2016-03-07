@@ -8,11 +8,10 @@
 package com.gt.db;
 
 /**
- * 
  * @author Ganesh Tiwari
- * 
  */
 public interface Database {
+
 	/**
 	 * sets the current DB operation mode
 	 */

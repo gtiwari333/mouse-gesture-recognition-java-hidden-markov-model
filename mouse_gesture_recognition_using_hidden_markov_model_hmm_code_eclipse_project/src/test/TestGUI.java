@@ -21,41 +21,40 @@ import com.gt.gesture.features.RawFeature;
 import com.gt.gesture.mouseCapture.DataCapturePanel;
 
 /**
- * 
  * @author Ganesh
- * 
  */
 public class TestGUI extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel jContentPane = null;
-	DataCapturePanel dcp = new DataCapturePanel();
-	private JButton jButton = null;
-	private JButton repaintBTN = null;
+	private static final long	serialVersionUID	= 1L;
+	private JPanel				jContentPane		= null;
+	DataCapturePanel			dcp					= new DataCapturePanel( );
+	private JButton				jButton				= null;
+	private JButton				repaintBTN			= null;
 
 	/**
 	 * This method initializes repaintBTN
 	 * 
 	 * @return javax.swing.JButton
 	 */
-	private JButton getRepaintBTN() {
-		if (repaintBTN == null) {
-			repaintBTN = new JButton();
-			repaintBTN.setText("Replay");
-			repaintBTN.setBounds(new Rectangle(534, 142, 119, 24));
-			repaintBTN.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					System.out.println("animate call");
+	private JButton getRepaintBTN( ) {
+		if ( repaintBTN == null ) {
+			repaintBTN = new JButton( );
+			repaintBTN.setText( "Replay" );
+			repaintBTN.setBounds( new Rectangle( 534, 142, 119, 24 ) );
+			repaintBTN.addActionListener( new java.awt.event.ActionListener( ) {
+
+				public void actionPerformed( java.awt.event.ActionEvent e ) {
+					System.out.println( "animate call" );
 					// copy values
 					RawFeature param = null;
 					try {
-						param = (RawFeature) dcp.getCapturedRawFeature().clone();
-					} catch (CloneNotSupportedException e1) {
-						System.out.println(e1.toString());
+						param = ( RawFeature ) dcp.getCapturedRawFeature( ).clone( );
+					} catch ( CloneNotSupportedException e1 ) {
+						System.out.println( e1.toString( ) );
 					}
-					dcp.animateCaptured(param);
+					dcp.animateCaptured( param );
 				}
-			});
+			} );
 		}
 		return repaintBTN;
 	}
@@ -63,23 +62,24 @@ public class TestGUI extends JFrame {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main( String[] args ) {
 		// TODO Auto-generated method stub
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				TestGUI thisClass = new TestGUI();
-				thisClass.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				thisClass.setVisible(true);
+		SwingUtilities.invokeLater( new Runnable( ) {
+
+			public void run( ) {
+				TestGUI thisClass = new TestGUI( );
+				thisClass.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+				thisClass.setVisible( true );
 			}
-		});
+		} );
 	}
 
 	/**
 	 * This is the default constructor
 	 */
-	public TestGUI() {
-		super();
-		initialize();
+	public TestGUI( ) {
+		super( );
+		initialize( );
 	}
 
 	/**
@@ -87,11 +87,11 @@ public class TestGUI extends JFrame {
 	 * 
 	 * @return void
 	 */
-	private void initialize() {
-		dcp.setBounds(new Rectangle(10, 8, 379, 237));
-		this.setSize(691, 309);
-		this.setContentPane(getJContentPane());
-		this.setTitle("JFrame");
+	private void initialize( ) {
+		dcp.setBounds( new Rectangle( 10, 8, 379, 237 ) );
+		this.setSize( 691, 309 );
+		this.setContentPane( getJContentPane( ) );
+		this.setTitle( "JFrame" );
 	}
 
 	/**
@@ -99,21 +99,22 @@ public class TestGUI extends JFrame {
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJContentPane() {
-		if (jContentPane == null) {
-			jContentPane = new JPanel();
-			jContentPane.setLayout(null);
-			jContentPane.add(dcp, null);
-			jContentPane.add(getRepaintBTN(), null);
+	private JPanel getJContentPane( ) {
+		if ( jContentPane == null ) {
+			jContentPane = new JPanel( );
+			jContentPane.setLayout( null );
+			jContentPane.add( dcp, null );
+			jContentPane.add( getRepaintBTN( ), null );
 
-			JButton extractFeatureBTN = new JButton("Extract Feature");
-			extractFeatureBTN.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					GestureFeatureExtractor gfe = new GestureFeatureExtractor((RawFeature) dcp.getCapturedRawFeature());
+			JButton extractFeatureBTN = new JButton( "Extract Feature" );
+			extractFeatureBTN.addActionListener( new ActionListener( ) {
+
+				public void actionPerformed( ActionEvent arg0 ) {
+					GestureFeatureExtractor gfe = new GestureFeatureExtractor( ( RawFeature ) dcp.getCapturedRawFeature( ) );
 				}
-			});
-			extractFeatureBTN.setBounds(534, 177, 119, 23);
-			jContentPane.add(extractFeatureBTN);
+			} );
+			extractFeatureBTN.setBounds( 534, 177, 119, 23 );
+			jContentPane.add( extractFeatureBTN );
 		}
 		return jContentPane;
 	}

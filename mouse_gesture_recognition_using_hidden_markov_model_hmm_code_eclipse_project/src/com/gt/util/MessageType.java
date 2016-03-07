@@ -9,7 +9,6 @@ package com.gt.util;
 
 /**
  * @author Ganesh
- *
  */
 public enum MessageType {
 	ERROR, WARNING, SUCCESS, INFO;

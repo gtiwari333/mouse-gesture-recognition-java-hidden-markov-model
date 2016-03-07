@@ -10,81 +10,77 @@ package com.gt.gesture.features;
 import java.io.Serializable;
 
 /**
- * a single feature vector is a point in K-dim space, here K=6 later it should
- * be conveted to Point
+ * a single feature vector is a point in K-dim space, here K=6 later it should be conveted to Point
  * 
  * @author Ganesh
- * 
  */
 public class GestureFeature implements Serializable {
 
-	private static final long serialVersionUID = 8399123588511856655L;
-	double locationRelativeToCG;
+	private static final long	serialVersionUID	= 8399123588511856655L;
+	double						locationRelativeToCG;
 	// double distanceBetweenSuccessivePts;
-	double angleWithCG;
+	double						angleWithCG;
 	// double angleWithSuccessivePts;
-	double angleWithInitialPt;
-	double angleWithEndPt;
-	double velocity;
-	double xMinyMinAngle;
-	double xMinyMaxAngle;
-	double xMaxyMinAngle;
-	double xMaxyMaxAngle;
+	double						angleWithInitialPt;
+	double						angleWithEndPt;
+	double						velocity;
+	double						xMinyMinAngle;
+	double						xMinyMaxAngle;
+	double						xMaxyMinAngle;
+	double						xMaxyMaxAngle;
 
-	public GestureFeature() {
-		super();
+	public GestureFeature( ) {
+		super( );
 	}
 
-	public double getxMinyMinAngle() {
+	public double getxMinyMinAngle( ) {
 		return xMinyMinAngle;
 	}
 
-	public void setxMinyMinAngle(double xMinyMinAngle) {
+	public void setxMinyMinAngle( double xMinyMinAngle ) {
 		this.xMinyMinAngle = xMinyMinAngle;
 	}
 
-	public double getxMinyMaxAngle() {
+	public double getxMinyMaxAngle( ) {
 		return xMinyMaxAngle;
 	}
 
-	public void setxMinyMaxAngle(double xMinyMaxAngle) {
+	public void setxMinyMaxAngle( double xMinyMaxAngle ) {
 		this.xMinyMaxAngle = xMinyMaxAngle;
 	}
 
-	public double getxMaxyMinAngle() {
+	public double getxMaxyMinAngle( ) {
 		return xMaxyMinAngle;
 	}
 
-	public void setxMaxyMinAngle(double xMaxyMinAngle) {
+	public void setxMaxyMinAngle( double xMaxyMinAngle ) {
 		this.xMaxyMinAngle = xMaxyMinAngle;
 	}
 
-	public double getxMaxyMaxAngle() {
+	public double getxMaxyMaxAngle( ) {
 		return xMaxyMaxAngle;
 	}
 
-	public void setxMaxyMaxAngle(double xMaxyMaxAngle) {
+	public void setxMaxyMaxAngle( double xMaxyMaxAngle ) {
 		this.xMaxyMaxAngle = xMaxyMaxAngle;
 	}
 
 	/**
-	 * 
 	 * @return sequence of feature coefficients of current vector
 	 */
-	public double[] getFeatureVector() {
-		return new double[] { getLocationRelativeToCG(),
+	public double[] getFeatureVector( ) {
+		return new double[] { getLocationRelativeToCG( ),
 				// getDistanceBetweenSuccessivePts(),
-				getAngleWithCG(),
+				getAngleWithCG( ),
 				// getAngleWithSuccessivePts(),
-				getAngleWithInitialPt(), getAngleWithEndPt(), getVelocity(), getxMaxyMaxAngle(), getxMaxyMinAngle(), getxMinyMaxAngle(),
-				getxMinyMinAngle() };
+				getAngleWithInitialPt( ), getAngleWithEndPt( ), getVelocity( ), getxMaxyMaxAngle( ), getxMaxyMinAngle( ), getxMinyMaxAngle( ), getxMinyMinAngle( ) };
 	}
 
-	public double getLocationRelativeToCG() {
+	public double getLocationRelativeToCG( ) {
 		return locationRelativeToCG;
 	}
 
-	public void setLocationRelativeToCG(double locationRelativeToCG) {
+	public void setLocationRelativeToCG( double locationRelativeToCG ) {
 		this.locationRelativeToCG = locationRelativeToCG;
 	}
 
@@ -97,11 +93,11 @@ public class GestureFeature implements Serializable {
 	// this.distanceBetweenSuccessivePts = distanceBetweenSuccessivePts;
 	// }
 
-	public double getAngleWithCG() {
+	public double getAngleWithCG( ) {
 		return angleWithCG;
 	}
 
-	public void setAngleWithCG(double angleWithCG) {
+	public void setAngleWithCG( double angleWithCG ) {
 		this.angleWithCG = angleWithCG;
 	}
 
@@ -113,32 +109,32 @@ public class GestureFeature implements Serializable {
 	// this.angleWithSuccessivePts = angleWithSuccessivePts;
 	// }
 
-	public double getVelocity() {
+	public double getVelocity( ) {
 		return velocity;
 	}
 
-	public void setVelocity(double velocity) {
+	public void setVelocity( double velocity ) {
 		this.velocity = velocity;
 	}
 
-	public double getAngleWithInitialPt() {
+	public double getAngleWithInitialPt( ) {
 		return angleWithInitialPt;
 	}
 
-	public void setAngleWithInitialPt(double angleWithInitialPt) {
+	public void setAngleWithInitialPt( double angleWithInitialPt ) {
 		this.angleWithInitialPt = angleWithInitialPt;
 	}
 
-	public double getAngleWithEndPt() {
+	public double getAngleWithEndPt( ) {
 		return angleWithEndPt;
 	}
 
-	public void setAngleWithEndPt(double angleWithEndPt) {
+	public void setAngleWithEndPt( double angleWithEndPt ) {
 		this.angleWithEndPt = angleWithEndPt;
 	}
 
 	@Override
-	public String toString() {
+	public String toString( ) {
 		return "GestureFeature [Loc_rel2CG=" + locationRelativeToCG + ", Dist_betnSuccPts="
 		// + distanceBetweenSuccessivePts
 				+ ", Angle_withCG=" + angleWithCG + ", AngleWithSuccPts="
