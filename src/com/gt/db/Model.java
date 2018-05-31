@@ -12,7 +12,7 @@ package com.gt.db;
  */
 public interface Model {
 
-	public String getModelType();
+    String getModelType();
 
-	public void showParameters();
+    void showParameters();
 }

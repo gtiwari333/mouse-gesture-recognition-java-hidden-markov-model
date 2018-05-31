@@ -7,51 +7,51 @@
  */
 package com.gt.hmm.classify.vq;
 
-import java.io.Serializable;
-
 import com.gt.db.Model;
+
+import java.io.Serializable;
 
 /**
  * @author Ganesh Tiwari
  */
 public class CodeBookDictionary implements Serializable, Model {
 
-	private static final long	serialVersionUID	= 2094442679375932181L;
-	protected int				dimension;
-	protected Centroid[]		cent;
+    private static final long serialVersionUID = 2094442679375932181L;
+    protected int dimension;
+    protected Centroid[] cent;
 
-	public CodeBookDictionary( ) {
-	}
+    public CodeBookDictionary() {
+    }
 
-	public int getDimension( ) {
-		return dimension;
-	}
+    public int getDimension() {
+        return dimension;
+    }
 
-	public void setDimension( int dimension ) {
-		this.dimension = dimension;
-	}
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
+    }
 
-	public Centroid[] getCent( ) {
-		return cent;
-	}
+    public Centroid[] getCent() {
+        return cent;
+    }
 
-	public void setCent( Centroid[] cent ) {
-		this.cent = cent;
-	}
+    public void setCent(Centroid[] cent) {
+        this.cent = cent;
+    }
 
-	public String getModelType( ) {
-		return "CodeBook";
-	}
+    public String getModelType() {
+        return "CodeBook";
+    }
 
-	@Override
-	public void showParameters( ) {
-		for ( int c = 0; c < cent.length; c++ ) {
-			// bw.write("c" + c + ": (");
-			for ( int k = 0; k < dimension; k++ ) {
-				System.out.print( cent[ c ].getCo( k ) + "\t" );
-			}
-			System.out.println( );
-		}
+    @Override
+    public void showParameters() {
+        for (Centroid aCent : cent) {
+            // bw.write("c" + c + ": (");
+            for (int k = 0; k < dimension; k++) {
+                System.out.print(aCent.getCo(k) + "\t");
+            }
+            System.out.println();
+        }
 
-	}
+    }
 }
