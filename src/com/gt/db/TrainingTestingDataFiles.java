@@ -8,6 +8,7 @@
 package com.gt.db;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * various operations relating to reading train/testing data folders<br>
@@ -29,16 +30,24 @@ public class TrainingTestingDataFiles {
      */
     public TrainingTestingDataFiles(String testOrTrain) {
         if (testOrTrain.equalsIgnoreCase("test")) {
-            setDataPath(new File("TestData"));
+            setDataPath(new File("testData"));
         } else if (testOrTrain.equalsIgnoreCase("train")) {
-            setDataPath(new File("TrainData"));
+            setDataPath(new File("trainData"));
         }
 
     }
 
     private void readFolder() {
-        folderNames = new String[getDataPath().list().length];
-        folderNames = getDataPath().list();// must return only folders
+        // only gesture folders, sorted
+        File[] dirs = getDataPath().listFiles(f -> f.isDirectory() && !f.getName().startsWith("."));
+        if (dirs == null) {
+            dirs = new File[0];
+        }
+        Arrays.sort(dirs);
+        folderNames = new String[dirs.length];
+        for (int i = 0; i < dirs.length; i++) {
+            folderNames[i] = dirs[i].getName();
+        }
     }
 
     public String[] readDataFolder() {
@@ -51,8 +60,9 @@ public class TrainingTestingDataFiles {
         dataFiles = new File[folderNames.length][];
         for (int i = 0; i < folderNames.length; i++) {
             System.out.println(folderNames[i]);
-            File dataFolder = new File(getDataPath() + "+ File.separator +" + folderNames[i] + "+ File.separator +");
-            dataFiles[i] = dataFolder.listFiles();
+            File dataFolder = new File(getDataPath(), folderNames[i]);
+            dataFiles[i] = dataFolder.listFiles(File::isFile);
+            Arrays.sort(dataFiles[i]);
         }
         System.out.println("++++++Folder's Content+++++");
         for (File[] dataFile : dataFiles) {

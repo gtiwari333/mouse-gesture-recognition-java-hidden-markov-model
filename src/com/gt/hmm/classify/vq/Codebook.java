@@ -71,6 +71,14 @@ public class Codebook {
      */
     protected final double MIN_DISTORTION = 0.1;
     /**
+     * K-means stops once an iteration improves the total distortion by less than this fraction
+     */
+    protected final double MIN_RELATIVE_IMPROVEMENT = 1e-3;
+    /**
+     * upper bound on K-means iterations per split
+     */
+    protected final int MAX_KMEANS_ITERATIONS = 100;
+    /**
      * Codebook size - number of codewords (codevectors)<br>
      * default is: 256
      */
@@ -151,12 +159,6 @@ public class Codebook {
      * called by: Codebook
      */
     protected void initialize() {
-        double distortion_before_update = 0; // distortion measure before
-        // updating centroids
-        double distortion_after_update = 0; // distortion measure after update
-        // centroids
-
-        // design a 1-vector Codebook
         centroids = new Centroid[1];
 
         // then initialize it with (0, 0) coordinates
@@ -180,22 +182,29 @@ public class Codebook {
 
             // group training points to centroids closest to them
             groupPtoC();
-
-            // Iteration 2: perform K-means algorithm
-            do {
-                for (Centroid centroid1 : centroids) {
-                    distortion_before_update += centroid1.getDistortion();
-                    centroid1.update();
+            // Iteration 2: perform K-means algorithm until the distortion stops improving
+            for (int iteration = 0; iteration < MAX_KMEANS_ITERATIONS; iteration++) {
+                // distortion measure before updating centroids
+                double distortion_before_update = 0;
+                for (Centroid centroid : centroids) {
+                    distortion_before_update += centroid.getDistortion();
+                    centroid.update();
                 }
 
                 // regroup
                 groupPtoC();
 
+                // distortion measure after updating centroids
+                double distortion_after_update = 0;
                 for (Centroid centroid : centroids) {
                     distortion_after_update += centroid.getDistortion();
                 }
 
-            } while (Math.abs(distortion_after_update - distortion_before_update) < MIN_DISTORTION);
+                double improvement = distortion_before_update - distortion_after_update;
+                if (improvement < MIN_DISTORTION || improvement < MIN_RELATIVE_IMPROVEMENT * distortion_before_update) {
+                    break;
+                }
+            }
         }
     }
 
@@ -226,7 +235,7 @@ public class Codebook {
      * called by: Codebook
      */
     protected void split() {
-        System.out.println("Centroids length now becomes " + centroids.length + 2);
+        System.out.println("Centroids length now becomes " + centroids.length * 2);
         Centroid temp[] = new Centroid[centroids.length * 2];
         double tCo[][];
         for (int i = 0; i < temp.length; i += 2) {
@@ -242,7 +251,6 @@ public class Codebook {
         }
 
         // replace old centroids array with new one
-        centroids = new Centroid[temp.length];
         centroids = temp;
     }
 

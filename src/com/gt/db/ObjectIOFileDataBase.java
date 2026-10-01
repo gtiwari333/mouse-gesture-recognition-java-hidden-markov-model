@@ -13,6 +13,7 @@ import com.gt.hmm.classify.vq.CodeBookDictionary;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,18 +57,12 @@ public class ObjectIOFileDataBase implements Database {
      */
     @Override
     public String[] getRegisteredModelNames() {
-        modelFiles = readRegisteredWithExtension();
-        if (modelFiles != null) {
-            if (mode == DBMode.HMM_MODEL) {
-                return removeExtension(modelFiles);
-            }
-            return modelFiles;
-        } else {
-            String[] tmp = new String[1];
-            tmp[0] = "";
-            return tmp;
+        File[] entries = listEntries();
+        String[] names = new String[entries.length];
+        for (int i = 0; i < entries.length; i++) {
+            names[i] = isFolderPerName() ? entries[i].getName() : removeExtension(entries[i].getName());
         }
-
+        return names;
     }
 
     /**
@@ -99,24 +94,29 @@ public class ObjectIOFileDataBase implements Database {
         }
     }
 
-    private String[] readRegisteredWithExtension() {
-        File modelPath = new File(CURRENTFOLDER);
-        // modelFiles = new String[modelPath.list().length];
-        modelFiles = modelPath.list();// must return only folders
-        return modelFiles;
+    /**
+     * train/test data has one sub folder per gesture; models are one file per gesture
+     */
+    private boolean isFolderPerName() {
+        return mode == DBMode.TRAINDATA || mode == DBMode.TESTDATA;
     }
 
-    private String[] removeExtension(String[] modelFiles) {
-        // remove the ext i.e., type
-        String[] noExtension = new String[modelFiles.length];
-        for (int i = 0; i < modelFiles.length; i++) {
-            int indexOfDot = modelFiles[i].indexOf(".");
-            noExtension[i] = modelFiles[i].substring(0, indexOfDot);
-            // TODO:check
-            // the
-            // lengths
+    /**
+     * sorted gesture folders (train/test data) or model files (HMM/codebook) of the current mode,
+     * skipping anything else, e.g. .DS_Store
+     */
+    private File[] listEntries() {
+        File[] entries = new File(CURRENTFOLDER).listFiles(f -> !f.getName().startsWith(".")
+                && (isFolderPerName() ? f.isDirectory() : f.isFile() && f.getName().endsWith("." + mode)));
+        if (entries == null) {
+            return new File[0];
         }
-        return noExtension;
+        Arrays.sort(entries);
+        return entries;
+    }
+
+    private String removeExtension(String fileName) {
+        return fileName.substring(0, fileName.length() - ("." + mode).length());
     }
 
     /**
@@ -144,40 +144,31 @@ public class ObjectIOFileDataBase implements Database {
         }
     }
 
-    private int getFileCount(File filePath) {
-        return filePath.list().length;
-    }
-
     @Override
     public Model[][] readAllDataofCurrentMode() {
         Model[][] readModel = null;
         switch (mode) {
             case HMM_MODEL:
-                File hmmPath = new File(CURRENTFOLDER + File.separator);
-                int count = getFileCount(hmmPath);
-                readModel = new Model[0][count];
-                String[] modelFiles = hmmPath.list();
-                for (int i = 0; i < count; i++) {
-                    readModel[0][i] = readModel(modelFiles[i]);
+                String[] names = getRegisteredModelNames();
+                readModel = new Model[1][names.length];
+                for (int i = 0; i < names.length; i++) {
+                    readModel[0][i] = readModel(names[i]);
                 }
                 break;
             case CODEBOOK_MODEL:
-                readModel = new Model[0][0];
-                readModel[0][0] = readModel("");
+                readModel = new Model[][]{{readModel("")}};
                 break;
             case TRAINDATA:
             case TESTDATA:
-                File folderPath = new File(CURRENTFOLDER + File.separator);
-                int dataCount = getFileCount(folderPath);
-                readModel = new Model[dataCount][50];
-                File[] dataTypes = folderPath.listFiles();
+                // same order as getRegisteredModelNames()
+                File[] dataTypes = listEntries();
+                readModel = new Model[dataTypes.length][];
                 for (int i = 0; i < dataTypes.length; i++) {
-                    File[] cur = dataTypes[i].listFiles();
-                    // FIXME: prob here , abs rel path.. extension 3 chars
+                    File[] cur = dataTypes[i].listFiles(f -> f.isFile() && f.getName().endsWith("." + mode));
+                    Arrays.sort(cur);
                     List<Model> lmodel = new ArrayList<>();
                     for (File aCur : cur) {
-                        // TODO: check value of cur, must be valid
-                        lmodel.add((Model) readModel(aCur.toString()));
+                        lmodel.add(readModel(aCur.toString()));
                     }
                     readModel[i] = lmodel.toArray(new Model[0]);
                 }
@@ -215,6 +206,7 @@ public class ObjectIOFileDataBase implements Database {
                 ObjectIO<RawFeature> oio3 = new ObjectIO<>();
                 // name should be name of file with extension
                 model = oio3.readModel(name);
+                break;
             default:
         }
         return model;

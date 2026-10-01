@@ -18,8 +18,6 @@ import java.io.*;
 public class ObjectIO<T> {
 
     T model;
-    private ObjectInputStream input;
-    private ObjectOutputStream output;
 
     /**
      * default constructor of modelDB
@@ -42,27 +40,15 @@ public class ObjectIO<T> {
      * @param filePath
      */
     public void saveModel(String filePath) {
-        System.out.println("CurrentFilePath  :: " + filePath);
         // if parent folder doesnot exists, create one
-        File f = new File(filePath).getParentFile();
+        File f = new File(filePath).getAbsoluteFile().getParentFile();
         if (!f.exists()) {
             f.mkdirs();
         }
-        // open file stream
-        try {
-            output = new ObjectOutputStream(new FileOutputStream(filePath));
-        } catch (FileNotFoundException e) {
-            System.out.println("File Not Found, while saving model");
-        } catch (IOException e) {
-            System.out.println("Some IO Exception, while opening file, for saving");
-        }
-        // save model
-        try {
+        try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filePath))) {
             output.writeObject(model);
-            output.close();
         } catch (IOException e) {
-            System.out.println("IOException, error on writing model to file");
-            e.printStackTrace();
+            throw new UncheckedIOException("could not save model to " + filePath, e);
         }
     }
 
@@ -70,29 +56,20 @@ public class ObjectIO<T> {
      * read the model from {@code filePath} of type T
      *
      * @param filePath
-     * @return the model of type T
+     * @return the model of type T, or null when the file does not exist
      */
+    @SuppressWarnings("unchecked")
     public T readModel(String filePath) {
-        // open file stream
-        try {
-            input = new ObjectInputStream(new FileInputStream(filePath));
-        } catch (FileNotFoundException e) {
-            System.out.println("File Not Found, while reading model");
-        } catch (IOException e) {
-            System.out.println("Some IO Exception, while opening file");
-        }
-        // read
-        try {
-            model = (T) input.readObject();
-            input.close();
-        } catch (IOException e) {
-            System.out.println("Some IO Exception, while reading object from file");
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.out.println("Class Not Found, error on type cast");
-        } catch (NullPointerException e) {
-            System.out.println("new user we guess");
+        if (!new File(filePath).isFile()) {
+            System.out.println("File Not Found, while reading model " + filePath);
             return null;
+        }
+        try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(filePath))) {
+            model = (T) input.readObject();
+        } catch (IOException e) {
+            throw new UncheckedIOException("could not read model from " + filePath, e);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("unexpected class in " + filePath, e);
         }
         return model;
     }

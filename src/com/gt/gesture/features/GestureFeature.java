@@ -24,6 +24,10 @@ public class GestureFeature implements Serializable {
     double angleWithInitialPt;
     double angleWithEndPt;
     double velocity;
+    /**
+     * full-circle direction of motion to the next point; the other angles are orientations only
+     */
+    double motionDirection;
     double xMinyMinAngle;
     double xMinyMaxAngle;
     double xMaxyMinAngle;
@@ -73,7 +77,7 @@ public class GestureFeature implements Serializable {
                 // getDistanceBetweenSuccessivePts(),
                 getAngleWithCG(),
                 // getAngleWithSuccessivePts(),
-                getAngleWithInitialPt(), getAngleWithEndPt(), getVelocity(), getxMaxyMaxAngle(), getxMaxyMinAngle(), getxMinyMaxAngle(), getxMinyMinAngle()};
+                getAngleWithInitialPt(), getAngleWithEndPt(), getVelocity(), getxMaxyMaxAngle(), getxMaxyMinAngle(), getxMinyMaxAngle(), getxMinyMinAngle(), getMotionDirection()};
     }
 
     public double getLocationRelativeToCG() {
@@ -109,6 +113,14 @@ public class GestureFeature implements Serializable {
     // this.angleWithSuccessivePts = angleWithSuccessivePts;
     // }
 
+    public double getMotionDirection() {
+        return motionDirection;
+    }
+
+    public void setMotionDirection(double motionDirection) {
+        this.motionDirection = motionDirection;
+    }
+
     public double getVelocity() {
         return velocity;
     }
@@ -139,6 +151,6 @@ public class GestureFeature implements Serializable {
                 // + distanceBetweenSuccessivePts
                 + ", Angle_withCG=" + angleWithCG + ", AngleWithSuccPts="
                 // + angleWithSuccessivePts
-                + ", AngleWithInitPt=" + angleWithInitialPt + ", AngleWithEndPt=" + angleWithEndPt + ", Velocity=" + velocity + "]";
+                + ", AngleWithInitPt=" + angleWithInitialPt + ", AngleWithEndPt=" + angleWithEndPt + ", Velocity=" + velocity + ", MotionDirection=" + motionDirection + "]";
     }
 }

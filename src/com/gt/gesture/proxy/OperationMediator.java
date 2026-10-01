@@ -20,6 +20,7 @@ import com.gt.hmm.classify.vq.Points;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A mediator class to access all HMM/VQ algorithms<br>
@@ -27,6 +28,12 @@ import java.util.List;
  * @author Ganesh
  */
 public class OperationMediator {
+
+    /**
+     * number of VQ codewords = number of HMM output symbols
+     */
+    static final int CODEBOOK_SIZE = 64;
+    static final int NUM_STATES = 4;
 
     private Database database;
     private List<GestureFeature> allFeaturesList;
@@ -87,6 +94,9 @@ public class OperationMediator {
         // find the largest likelihood
         double highest = Double.NEGATIVE_INFINITY;
         int wordIndex = -1;
+        if (regGestures.length == 0) {
+            throw new IllegalStateException("no trained gesture models found, train first");
+        }
         for (int j = 0; j < regGestures.length; j++) {
             if (likelihoods[j] > highest) {
                 highest = likelihoods[j];
@@ -137,7 +147,7 @@ public class OperationMediator {
         GestureFeature[] allFeaturesArr = new GestureFeature[totalFrames];
         allFeaturesArr = allFeaturesList.toArray(new GestureFeature[0]);
         // clustering is done automatically after callng constructor
-        Codebook cbk = new Codebook(getPointsFromFeatureVector(allFeaturesArr));
+        Codebook cbk = new Codebook(getPointsFromFeatureVector(allFeaturesArr), CODEBOOK_SIZE);
         cbk.saveToFile();
         operationSuccess = true;
         return operationSuccess;
@@ -157,10 +167,6 @@ public class OperationMediator {
         Model[][] regModels = database.readAllDataofCurrentMode();
         String[] gestName = database.getRegisteredModelNames();
         int quantizedSeq[][];
-        // FIXME: same in Codebook.java class
-        int NUM_SYMBOLS = 64;// FIXME: what is appropriate value for these
-        int NUM_STATES = 4;
-        HiddenMarkov mkv = new HiddenMarkov(NUM_STATES, NUM_SYMBOLS);
         // for each gesture
         for (int i = 0; i < regModels.length; i++) {
             operationSuccess = false;
@@ -171,6 +177,8 @@ public class OperationMediator {
                 Points[] pts = getPointsFromFeatureVector(gf);
                 quantizedSeq[j] = codebook.quantize(pts);
             }
+            // a fresh model per gesture; the fixed seed makes retraining reproducible
+            HiddenMarkov mkv = new HiddenMarkov(NUM_STATES, CODEBOOK_SIZE, new Random(gestName[i].hashCode()));
             mkv.setTrainSeq(quantizedSeq);
             mkv.train();
             mkv.save(gestName[i]);

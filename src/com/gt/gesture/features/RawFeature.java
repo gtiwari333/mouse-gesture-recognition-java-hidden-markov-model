@@ -91,7 +91,11 @@ public class RawFeature implements Serializable, Model {
     @Override
     public Object clone() throws CloneNotSupportedException {
         double[] curTimeC = curTime.clone();
-        Point[] drawPointC = drawPoint.clone();
+        // Point is mutable: copy each one, not just the array
+        Point[] drawPointC = new Point[drawPoint.length];
+        for (int i = 0; i < drawPoint.length; i++) {
+            drawPointC[i] = new Point(drawPoint[i]);
+        }
         return new RawFeature(curTimeC, drawPointC);
     }
 
